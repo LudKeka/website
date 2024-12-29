@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js" integrity="sha384-QDZYP2kJe9N0ZsX5/ctG54qChmPfzFzYuyTA+8Cg/rP3lIH5uwXOrpbEjK9z4jeN" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="messages"></div>
+        <input type="text" id="message-input" placeholder="Type your message here...">
+        <button id="send-button">Send</button>
+    </div>
+
+    <script>
+        const socket = io();
+
+        const messageInput = document.getElementById('message-input');
+        const messagesDiv = document.getElementById('messages');
+        const sendButton = document.getElementById('send-button');
+
+        // Send a message to the server
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value;
+            if (message) {
+                socket.send(message);
+                messageInput.value = '';
+            }
+        });
+
+        // Receive a message from the server
+        socket.on('message', (msg) => {
+            const messageElement = document.createElement('div');
+            messageElement.textContent = msg;
+            messagesDiv.appendChild(messageElement);
+        });
+    </script>
+</body>
+</html>
